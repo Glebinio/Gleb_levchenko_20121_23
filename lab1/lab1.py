@@ -1,5 +1,5 @@
 def main ():
-
+# рекурсивный перебор всех возможных расстановок
     def operation (i,s,l,b,a,sum):
         nonlocal g
         nonlocal k
@@ -16,8 +16,8 @@ def main ():
             operation (i+1,s1,l,b,a,sum1)
             operation (i+1,s2,l,b,a,sum2)
 
-        
-    with open('x.txt', 'r') as text:
+# чтение данных из файла
+    with open('input.txt', 'r') as text:
         mylist = text.readline()
     text.close()
     g,k='',''
@@ -30,15 +30,16 @@ def main ():
     for i in l:
         s+=i
     s1=l[0]
+    # вызов функции
     operation (0,s1,s,b,a,int(l[0]))
-
+# вывод данных на консоль и запись в файл
     if g!='':
         m=g+'='+str(b)
         print (g,'=',b)
     else:
         m=k
         print (k)
-    with open('x.txt', 'w') as text:
+    with open('output.txt', 'w') as text:
         text.write(mylist+'\n'+m)
 
 if __name__=='__main__':
