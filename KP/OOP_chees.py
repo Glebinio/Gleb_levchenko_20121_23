@@ -300,6 +300,7 @@ class sh_1:
         k=0
         g=[]
         i,j=0,0
+        flag=True
 
         # Главный цикл
         running = True
@@ -328,7 +329,11 @@ class sh_1:
                         g.append((x,y))
                         k+=1
                     elif event.key==pygame.K_RCTRL:
-                        g.append ((x,y))
+                        for h in g:
+                            if h==(x,y):
+                                flag=False
+                        if flag:
+                            g.append ((x,y))
                         ras(self.n,self.l,g)
 
                     
