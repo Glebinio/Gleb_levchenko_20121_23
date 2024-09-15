@@ -186,11 +186,7 @@ class sh2:
         # Завершение Pygame
         pygame.quit()
 
-
 class sh_1:
-
-    
-
     def __init__  (self,n,l):
         self.n=n
         self.l=l
@@ -265,8 +261,8 @@ class sh_1:
                 rect = pygame.Rect(x * self.CELL_SIZE, y * self.CELL_SIZE, self.CELL_SIZE, self.CELL_SIZE)
                 pygame.draw.rect(screen, color, rect)
 
-
-    def otr (self):        
+    def otr(self):
+        # ... (начало функции без изменений)
         pygame.init()
 
         # Размер экрана
@@ -290,6 +286,7 @@ class sh_1:
         figure_positions = [[False for j in range(self.n)] for i in range(self.n)]
 
         figure_positions[x][y]=True
+        self.figures = []
 
 
 
@@ -305,37 +302,27 @@ class sh_1:
         # Главный цикл
         running = True
         while running:
-            for event in pygame.event.get():
+            for event in pygame.event.get():              
                 if event.type == pygame.QUIT:
-                    running = False
-                elif  event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_LEFT and x==0 and y==0:
-                        x=0
-                        y=0
-                    elif event.key == pygame.K_RIGHT and x==self.n-1 and y==self.n-1:
-                        x=self.n-1
-                        y=self.n-1
-                    elif event.key == pygame.K_RIGHT and x!=self.n-1:
-                        x+=1
-                    elif event.key == pygame.K_RIGHT and x==self.n-1:
-                        x=0
-                        y+=1
-                    elif event.key == pygame.K_LEFT and x==0:
-                        x=0
-                        y-=1
-                    elif event.key == pygame.K_LEFT and x!=0:
-                        x-=1
-                    elif event.key == pygame.K_SPACE:
-                        g.append((x,y))
-                        k+=1
-                    elif event.key==pygame.K_RCTRL:
-                        for h in g:
-                            if h==(x,y):
-                                flag=False
-                        if flag:
-                            g.append ((x,y))
-                        ras(self.n,self.l,g)
+                     running = False
+                if event.type == pygame.KEYDOWN:
+                    for m in self.figures:
+                        g.append (m)
+                    # g.append (self.figures)
+                    ras(self.n,self.l,g)
 
+                    running = False
+                if event.type == pygame.MOUSEBUTTONDOWN:
+
+                    mouse_x, mouse_y = event.pos
+                    x, y = mouse_x // CELL_SIZE, mouse_y // CELL_SIZE
+
+                    if 0 <= x < self.n and 0 <= y < self.n:
+                        if event.button == 1:  # ЛКМ
+                            self.figures.append((x, y))
+                        elif event.button == 3:  # ПКМ
+                            if (x, y) in self.figures:
+                                self.figures.remove((x, y))
                     
 
             # Очистка экрана
@@ -343,22 +330,194 @@ class sh_1:
 
             # Отрисовка шахматной доски
             self.draw_chessboard(screen)
-            if k>0:
-                for h in g:
-                    self.draw_red_triangle(screen, CELL_SIZE, h[0],h[1])
-                    self.draw_red_circles(screen, CELL_SIZE, h[0], h[1])
-            elif k==0:
-                self.draw_red_triangle(screen, CELL_SIZE, x,y)
+
+            for x, y in self.figures:
+                self.draw_red_triangle(screen, CELL_SIZE, x, y)
                 self.draw_red_circles(screen, CELL_SIZE, x, y)
-                
-            self.draw_red_triangle(screen, CELL_SIZE, x,y)
-            self.draw_red_circles(screen, CELL_SIZE, x, y)
 
             # Обновление экрана
             pygame.display.flip()
 
         # Завершение Pygame
         pygame.quit()
+
+# class sh_1:
+
+    
+
+#     def __init__  (self,n,l):
+#         self.n=n
+#         self.l=l
+#         # Цвета
+#         self.BLACK = (0, 0, 0)
+#         self.WHITE = (255, 255, 255)
+#         self.SCREEN_WIDTH = 600
+#         self.SCREEN_HEIGHT = 400
+#         # n = 10  # Размер доски 
+#         self.CELL_COUNT_X = self.n
+#         self.CELL_COUNT_Y = self.n
+#         self.CELL_SIZE = self.SCREEN_WIDTH // self.CELL_COUNT_X
+        
+#         self.screen_width = self.n * self.CELL_SIZE
+#         self.screen_height = self.n * self.CELL_SIZE
+
+
+
+
+#     def move_figure(self, x, y, key):
+
+#         if key == pygame.K_UP and y!=0:
+#             y = y - 1  # n-1
+#         elif key == pygame.K_DOWN and y!=self.n:
+#             y = self.n+1  # n+1
+#         elif key == pygame.K_RIGHT and x!=self.n:
+#             x+=1  # k+1
+#         elif key == pygame.K_LEFT and x!=0:
+#             x-=1  # k-1
+
+#         return (x,y)
+
+
+
+
+#     def draw_red_circles(self, screen, cell_size, x, y):
+        
+#         # Получение координат центра треугольника
+#         center_x = (x + 0.5) * cell_size
+#         center_y = (y + 0.5) * cell_size
+
+#         # Радиус кружочков
+#         radius = cell_size // 4
+
+#         # Расстановка кружочков по соседним клеткам
+#         for dx, dy in [(0, 1), (0, 2), (0, -1), (0, -2), (1, 0), (2, 0), (-1, 0), (-2, 0),(1, 2), (2, 1), (2, -1), (1, -2), (-1, -2), (-2, -1), (-2, 1), (-1, 2)]:
+#             new_x = dx+center_x + (dx) * cell_size
+#             new_y = dx+ center_y + (dy) * cell_size
+#             pygame.draw.circle(screen, (0,0,255), (new_x,new_y),  radius, width=0)
+
+#             # Проверка, находится ли кружочек в пределах доски
+
+
+#     def draw_red_triangle(self, screen, cell_size, x, y):
+        
+#         # Определение вершин треугольника
+#         points = [
+#             (x * cell_size + cell_size / 2, y * cell_size),
+#             (x * cell_size, y * cell_size + cell_size),
+#             (x * cell_size + cell_size, y * cell_size + cell_size / 2),
+#         ]
+
+#         # Определение цвета треугольника
+#         color = (255, 0, 0)  # Красный
+
+#         # Отрисовка треугольника
+#         pygame.draw.polygon(screen, color, points)
+#     def draw_chessboard(self, screen):
+#         for y in range(self.n):
+#             for x in range(self.n):
+#                 color = self.WHITE if (x + y) % 2 == 0 else self.BLACK
+#                 rect = pygame.Rect(x * self.CELL_SIZE, y * self.CELL_SIZE, self.CELL_SIZE, self.CELL_SIZE)
+#                 pygame.draw.rect(screen, color, rect)
+
+
+#     def otr (self):        
+#         pygame.init()
+
+#         # Размер экрана
+        
+#         # Цвета
+#         BLACK = (0, 0, 0)
+#         WHITE = (255, 255, 255)
+#         SCREEN_WIDTH = 600
+#         SCREEN_HEIGHT = 400
+#         # n = 10  # Размер доски 
+#         CELL_COUNT_X = self.n
+#         CELL_COUNT_Y = self.n
+#         CELL_SIZE = SCREEN_WIDTH // CELL_COUNT_X
+        
+#         screen_width = self.n * CELL_SIZE
+#         screen_height = self.n * CELL_SIZE
+
+#         # Размер клетки
+#         x = 0  # Координата X клетки (0-based)
+#         y = 0  # Координата Y клетки (0-based)
+#         figure_positions = [[False for j in range(self.n)] for i in range(self.n)]
+
+#         figure_positions[x][y]=True
+
+
+
+#         # Создание экрана
+#         screen = pygame.display.set_mode((screen_width, screen_height))
+#         pygame.display.set_caption("Шахматная доска")
+
+#         k=0
+#         g=[]
+#         i,j=0,0
+#         flag=True
+
+#         # Главный цикл
+#         running = True
+#         while running:
+#             for event in pygame.event.get():
+#                 if event.type == pygame.QUIT:
+#                     running = False
+#                 if event.type == pygame.MOUSEBUTTONDOWN:
+#                     mouse_x, mouse_y = event.pos
+#                     pos = pygame.mouse.get_pressed()
+                    
+
+#                 # elif  event.type == pygame.KEYDOWN:
+#                 #     if event.key == pygame.K_LEFT and x==0 and y==0:
+#                 #         x=0
+#                 #         y=0
+#                 #     elif event.key == pygame.K_RIGHT and x==self.n-1 and y==self.n-1:
+#                 #         x=self.n-1
+#                 #         y=self.n-1
+#                 #     elif event.key == pygame.K_RIGHT and x!=self.n-1:
+#                 #         x+=1
+#                 #     elif event.key == pygame.K_RIGHT and x==self.n-1:
+#                 #         x=0
+#                 #         y+=1
+#                 #     elif event.key == pygame.K_LEFT and x==0:
+#                 #         x=0
+#                 #         y-=1
+#                 #     elif event.key == pygame.K_LEFT and x!=0:
+#                 #         x-=1
+#                 #     elif event.key == pygame.K_SPACE:
+#                 #         g.append((x,y))
+#                 #         k+=1
+#                 #     elif event.key==pygame.K_RCTRL:
+#                 #         for h in g:
+#                 #             if h==(x,y):
+#                 #                 flag=False
+#                 #         if flag:
+#                 #             g.append ((x,y))
+#                 #         ras(self.n,self.l,g)
+
+                    
+
+#             # Очистка экрана
+#             screen.fill((0, 0, 0))
+
+#             # Отрисовка шахматной доски
+#             self.draw_chessboard(screen)
+#             if k>0:
+#                 for h in g:
+#                     self.draw_red_triangle(screen, CELL_SIZE, h[0],h[1])
+#                     self.draw_red_circles(screen, CELL_SIZE, h[0], h[1])
+#             elif k==0:
+#                 self.draw_red_triangle(screen, CELL_SIZE, x,y)
+#                 self.draw_red_circles(screen, CELL_SIZE, x, y)
+                
+#             self.draw_red_triangle(screen, CELL_SIZE, x,y)
+#             self.draw_red_circles(screen, CELL_SIZE, x, y)
+
+#             # Обновление экрана
+#             pygame.display.flip()
+
+#         # Завершение Pygame
+#         pygame.quit()
 
 
 
